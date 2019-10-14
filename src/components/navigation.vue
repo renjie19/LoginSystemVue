@@ -1,0 +1,83 @@
+<template>
+    <div id="wrapper">
+        <div id="nav_bar">
+            <h2>WELCOME</h2>
+            <div class="button_wrapper">
+                <button class="btn" @click="showing='log',display===true?display=false:display">HOME</button>
+                <button class="btn" @click="display=!display">EMPLOYEE</button>
+                <div class="child" v-show="display">
+                    <button class="btn" @click="showing='create',display=!display">ADD</button>
+                    <br>
+                    <button class="btn" @click="showing='manage',display=!display">MANAGE</button>
+                </div>
+                <button class="btn" @click="showing='rep',display===true?display=false:display">REPORTS</button>
+            </div>
+        </div>
+        <component :is="showing"></component>
+    </div>
+</template>
+
+<script>
+    import login from "./login";
+    import report from "./report";
+    import create_employee from "./create_employee";
+    import manage_employee from "./manage_employee";
+    export default {
+        data:function () {
+            return {
+                showing:'log',
+                display:false
+            }
+        },
+        components:{
+            rep:report,
+            log:login,
+            create:create_employee,
+            manage:manage_employee
+        },
+        methods:{
+
+        }
+    }
+</script>
+
+<style scoped>
+    #nav_bar{
+        width: 100%;
+        height: fit-content;
+        box-shadow: 0 2px 5px grey;
+        font-family: Garuda,serif;
+    }
+
+    .btn{
+        position: relative;
+        padding:15px;
+        width: 120px;
+        height: 100%;
+        display: inline-block;
+        border: 0;
+        background-color: white;
+        text-align: center;
+    }
+
+    .btn:hover{
+        background: lightgray;
+    }
+
+    .child{
+        position: absolute;
+        margin-left: 120px;
+        background-color: white;
+        box-shadow: 1px 1px 2px grey;
+    }
+
+    .button_wrapper{
+        display: inline-block;
+        float: right;
+    }
+
+    h2 {
+        display: inline-block;
+        margin: 0 25px auto;
+    }
+</style>
