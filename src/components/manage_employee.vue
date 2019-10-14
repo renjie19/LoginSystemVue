@@ -1,20 +1,21 @@
 <template>
     <div class="wrapper">
         <div class="table_wrapper">
-            <table class="employee_list">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Employee</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="employee in employees" :key="employee.name" @click="select_item(employee)">
-                    <td>{{employee.id}}</td>
-                    <td>{{employee.name}}</td>
-                </tr>
-                </tbody>
-            </table>
+<!--            <table class="employee_list">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Id</th>-->
+<!--                    <th>Employee</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr v-for="employee in employees" :key="employee.name" @click="select_item(employee)">-->
+<!--                    <td>{{employee.id}}</td>-->
+<!--                    <td>{{employee.name}}</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+            <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
         </div>
         <div class="details">
             <h2>INFORMATION</h2>
@@ -26,32 +27,34 @@
             <div class="form-group">
                 <label>AGE</label>
                 <br>
-                <input type="text" id="age" class="form-control">
+                <input type="text" id="age" class="form-control" v-model="emp.age">
             </div>
             <div class="form-group">
                 <label >ADDRESS</label>
                 <br>
-                <input type="text" id="address" class="form-control">
+                <input type="text" id="address" class="form-control" v-model="emp.address">
             </div>
             <div class="form-group">
                 <label for="position">POSITION</label>
                 <br>
-                <input type="text" id="position" class="form-control">
+                <input type="text" id="position" class="form-control" v-model="emp.position">
             </div>
             <div class="form-group">
                 <label for="license">LICENSE</label>
                 <br>
-                <input type="text" id="license" class="form-control">
+                <input type="text" id="license" class="form-control" v-model="emp.license.license_number">
             </div>
             <button class="btn">SUBJECTS</button>
             <button class="btn">SECTIONS</button>
         </div>
         <button class="btn">SAVE</button>
+        <button class="btn" @click="deleteEmployee(itemIndex)">DELETE</button>
+        <button class="btn" @click="clearFields">CLEAR</button>
     </div>
 </template>
 
 <script>
-
+    import employee_table from "./employee_table";
     export default {
         data(){
             return{
@@ -78,17 +81,30 @@
                         license_number:'',
                     }
                 },
+                itemIndex:''
             }
         },
         components:{
-
+            employee_table:employee_table
         },
         methods:{
             display(){
                 return this.showing = !this.showing
             },
-            select_item(item){
-                this.emp=item
+            select_item(index,employee){
+                this.emp=employee;
+                this.itemIndex = index;
+            },
+            deleteEmployee(index){
+                this.employees.splice(index,1);
+            },
+            clearFields(){
+                document.getElementById("name").value = '';
+                document.getElementById("age").value = '';
+                document.getElementById("address").value = '';
+                document.getElementById("position").value = '';
+                document.getElementById("license").value = '';
+
             }
         },
         props:{

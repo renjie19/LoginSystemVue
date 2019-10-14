@@ -54,7 +54,6 @@
 </template>
 
 <script>
-    import employee from "./employee";
     export default {
         data(){
             return{
