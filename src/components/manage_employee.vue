@@ -1,20 +1,6 @@
 <template>
     <div class="wrapper">
         <div class="table_wrapper">
-<!--            <table class="employee_list">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Id</th>-->
-<!--                    <th>Employee</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr v-for="employee in employees" :key="employee.name" @click="select_item(employee)">-->
-<!--                    <td>{{employee.id}}</td>-->
-<!--                    <td>{{employee.name}}</td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
             <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
         </div>
         <div class="details">
@@ -25,12 +11,12 @@
                 <input type="text" id="name" class="form-control" v-model="emp.name">
             </div>
             <div class="form-group">
-                <label>AGE</label>
+                <label for="age">AGE</label>
                 <br>
-                <input type="text" id="age" class="form-control" v-model="emp.age">
+                <input type="number" id="age" class="form-control" v-model.number="emp.age">
             </div>
             <div class="form-group">
-                <label >ADDRESS</label>
+                <label for="address">ADDRESS</label>
                 <br>
                 <input type="text" id="address" class="form-control" v-model="emp.address">
             </div>
@@ -42,14 +28,16 @@
             <div class="form-group">
                 <label for="license">LICENSE</label>
                 <br>
-                <input type="text" id="license" class="form-control" v-model="emp.license.license_number">
+                <input type="number" id="license" class="form-control" v-model.number="emp.license.license_number">
             </div>
             <button class="btn">SUBJECTS</button>
             <button class="btn">SECTIONS</button>
         </div>
-        <button class="btn">SAVE</button>
-        <button class="btn" @click="deleteEmployee(itemIndex)">DELETE</button>
-        <button class="btn" @click="clearFields">CLEAR</button>
+        <div class = "button_holder">
+            <button class="btn" @click="save">SAVE</button>
+            <button class="btn" @click="deleteEmployee(itemIndex)">DELETE</button>
+            <button class="btn" @click="clearFields">CLEAR</button>
+        </div>
     </div>
 </template>
 
@@ -62,10 +50,10 @@
                     {id:0,name:'Rodrigo Duterte',age:55,address:'Manila',position:'President',
                         license:{license_id:0,license_number:5678}
                     },
-                    {id:0,name:'Gloria Arroyo',age:55,address:'Manila',position:'President',
+                    {id:1,name:'Gloria Arroyo',age:55,address:'Manila',position:'President',
                         license:{license_id:0,license_number:5678}
                     },
-                    {id:0,name:'Ninoy Aquino',age:55,address:'Manila',position:'President',
+                    {id:2,name:'Ninoy Aquino',age:55,address:'Manila',position:'President',
                         license:{license_id:0,license_number:5678}
                     },
                 ],
@@ -91,20 +79,40 @@
             display(){
                 return this.showing = !this.showing
             },
-            select_item(index,employee){
-                this.emp=employee;
-                this.itemIndex = index;
+            select_item(employee){
+                this.emp={
+                    name:employee.name,
+                    age:employee.age,
+                    address:employee.address,
+                    position:employee.position,
+                    license:{
+                        license_id:employee.license.license_id,
+                        license_number:employee.license.license_number
+                    }
+                };
             },
             deleteEmployee(index){
+                this.clearFields();
                 this.employees.splice(index,1);
             },
             clearFields(){
-                document.getElementById("name").value = '';
-                document.getElementById("age").value = '';
-                document.getElementById("address").value = '';
-                document.getElementById("position").value = '';
-                document.getElementById("license").value = '';
-
+                console.log("clear");
+                this.emp={
+                    name: null,
+                    age:null,
+                    address:null,
+                    position:null,
+                    license:{
+                        license_id:null,
+                        license_number:null
+                    }
+                };
+            },
+            save(){
+                this.showAlert('clicked');
+            },
+            showAlert(message){
+                alert(message);
             }
         },
         props:{
@@ -117,15 +125,9 @@
     .wrapper{
         width: 70%;
         height: fit-content;
-        box-shadow: 1px 1px 2px grey;
+        box-shadow: 1px 1px 5px grey;
         margin: 30px auto;
         position: relative;
-    }
-    .employee_list{
-        width: 100%;
-        height: fit-content;
-        text-align: center;
-        background: black;
     }
     .employee_list tr{
         background: lightblue;
@@ -164,12 +166,20 @@
         height: 25px;
         width: 250px;
     }
-
     .btn{
         border: none;
         background: lightblue;
         border-radius: 2px;
         padding: 10px;
         margin: 10px 10px 10px 10px;
+    }
+    .button_holder{
+        position: relative;
+        margin: auto;
+        width: 100%;
+        text-align: center;
+    }
+    .button_holder button{
+        background-color: lightsteelblue;
     }
 </style>

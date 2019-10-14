@@ -1,18 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="table_wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="employee in employees" :key="employee.id">
-                    <td>{{employee.name}}</td>
-                </tr>
-                </tbody>
-            </table>
+            <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
         </div>
         <div class="report_wrapper">
             <table>
@@ -31,9 +20,13 @@
                     <td>{{getTime(report.timeOut)}}</td>
                     <td>{{report.total}}</td>
                 </tr>
+                <tr>
+                    <td>Overall Total:{{overAll}}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
+
         <div class="edit_wrapper">
             <div class="edit_form">
                 <label for="timeIn">Time In</label>
@@ -51,87 +44,138 @@
 </template>
 
 <script>
+    import employee_table from "./employee_table";
+
     export default {
-        data(){
-            return{
-                employees:[
-                    {id:0,name:'Rodrigo Duterte',age:55,address:'Manila',position:'President',license:{license_id:0,license_number:987}},
-                    {id:1,name:'Rodrigo Duterte',age:55,address:'Manila',position:'President',license:{license_id:0,license_number:987}},
-                    {id:2,name:'Rodrigo Duterte',age:55,address:'Manila',position:'President',license:{license_id:0,license_number:987}}
+        data() {
+            return {
+                employees: [
+                    {
+                        id: 0,
+                        name: 'Rodrigo Duterte',
+                        age: 55,
+                        address: 'Manila',
+                        position: 'President',
+                        license: {license_id: 0, license_number: 987}
+                    },
+                    {
+                        id: 1,
+                        name: 'Gloria Arroyo',
+                        age: 55,
+                        address: 'Manila',
+                        position: 'President',
+                        license: {license_id: 0, license_number: 987}
+                    },
+                    {
+                        id: 2,
+                        name: 'Ninoy Aquino',
+                        age: 55,
+                        address: 'Manila',
+                        position: 'President',
+                        license: {license_id: 0, license_number: 987}
+                    }
                 ],
-                reports:[
-                    {id:0,timeIn:1571024493313,timeOut:1571076264,total:565},
+                reports: [
+                    {id: 0, timeIn: 1571024493313, timeOut: 1571076264, total: 565},
+                    {id: 1, timeIn: 1571024493313, timeOut: 1571076264, total: 565}
                 ],
-                log:{
-                    id:'',
-                    timeIn:'',
-                    timeOut:'',
-                    total:''
-                }
+                log: {
+                    id: '',
+                    timeIn: '',
+                    timeOut: '',
+                    total: ''
+                },
             }
         },
-        methods:{
-            getDate(dateInLong){
+        methods: {
+            getDate(dateInLong) {
                 let date = new Date(dateInLong);
                 return date.toLocaleDateString();
             },
-            getTime(timeInLong){
+            getTime(timeInLong) {
                 let time = new Date(timeInLong);
                 return time.toLocaleTimeString();
-                //return time.getHours()+':'+time.getMinutes().toString()+':'+time.getSeconds().toString();
             },
-            editTime(report){
-                this.log =report;
+            editTime(report) {
+                this.log = report;
                 document.getElementById("timeIn").value = new Date(this.log.timeIn).toLocaleTimeString();
                 document.getElementById("timeOut").value = new Date(this.log.timeOut).toLocaleTimeString();
-            }
+            },
+            select_item() {
+
+            },
+
+        },
+        components: {
+            employee_table: employee_table,
+        },
+        computed: {
+            overAll() {
+                // let totalHours = 0;
+                // this.reports.forEach((report)=>{
+                //     totalHours += report.total
+                // })
+                // return totalHours
+                return this.reports.reduce(function (acc, report) {
+                    return acc + report.total;
+                }, 0)
+            },
+
         }
     }
 </script>
 
 <style scoped>
-    .wrapper{
+    .wrapper {
         width: 60%;
         height: fit-content;
         min-height: 400px;
-        margin:30px auto;
+        margin: 30px auto;
         box-shadow: 1px 1px 2px grey;
     }
-    .wrapper td:hover{
+
+    .wrapper td:hover {
         cursor: default;
     }
-    .table_wrapper{
+
+    .table_wrapper {
         width: 30%;
         height: fit-content;
         min-height: 400px;
         box-shadow: 2px 0 0 grey;
         display: inline-block;
     }
-    .report_wrapper{
-        width:70%;
+
+    .report_wrapper {
+        width: 70%;
         height: fit-content;
         min-height: 400px;
         display: inline-block;
     }
-    .report_wrapper table{
+
+    .report_wrapper table {
         width: 100%;
         height: fit-content;
         max-height: 200px;
         text-align: center;
         border: solid 1px black;
     }
-    .table_wrapper table{
+
+    .table_wrapper table {
         width: 100%;
         height: fit-content;
         text-align: center;
     }
-    .table_wrapper th{
+
+    .table_wrapper th {
         background-color: cadetblue;
     }
-    .table_wrapper td{
+
+    .table_wrapper td {
         background-color: lightblue;
     }
-    .edit_wrapper{
+
+    .edit_wrapper {
         position: absolute;
         margin: 10px auto auto 15%;
         text-align: center;
@@ -139,14 +183,17 @@
         width: 30%;
         padding: 10px;
     }
-    .edit_form{
+
+    .edit_form {
         margin: 5px;
         display: inline-block;
     }
-    .edit_form label{
+
+    .edit_form label {
         margin: 5px;
     }
-    .edit_btn{
+
+    .edit_btn {
         margin: 3px;
         background: lightblue;
         border: none;

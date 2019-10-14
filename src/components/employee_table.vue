@@ -6,7 +6,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(employee,index) in employeeList" :key="employee.id" @click="getEmployee(employee,index)">
+        <tr v-for="employee in employeeList" :key="employee.id" @click="getEmployee(employee.id)">
             <td>{{employee.name}}</td>
         </tr>
         </tbody>
@@ -22,8 +22,14 @@
         },
         props:['employeeList'],
         methods:{
-            getEmployee(employee,index){
-                this.$emit('employeeSelected',index,employee);
+            getEmployee(id){
+                let value = this.employeeList.find((e) => {
+                    return e.id===id;
+                });
+                if(!value){
+                    alert("Not Found");
+                }
+                this.$emit('employeeSelected',value);
             }
         }
     }
