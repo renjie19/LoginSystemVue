@@ -38,8 +38,8 @@
                 <input type="text" id="timeOut" v-model="timeOut">
             </div>
             <br>
-            <button class="edit_btn">SAVE</button>
-            <button class="edit_btn">DELETE</button>
+            <button class="edit_btn" @click="save">SAVE</button>
+            <button class="edit_btn" @click="remove">DELETE</button>
         </div>
     </div>
 </template>
@@ -110,6 +110,7 @@
                     timeOut: '',
                     total: ''
                 },
+                selectedReportDate:'',
                 timeIn: '',
                 timeOut: '',
             }
@@ -131,8 +132,9 @@
                     timeOut: report.timeOut,
                     total: report.total
                 };
-                this.timeIn = new Date(this.selectedReport.timeIn.time).toLocaleTimeString();
-                this.timeOut = new Date(this.selectedReport.timeIn.time).toLocaleTimeString();
+                this.selectedReportDate = this.getDate(this.selectedReport.timeIn.time);
+                this.timeIn = new Date(this.selectedReport.timeIn.time).toLocaleTimeString('en-US',{hour12:false});
+                this.timeOut = new Date(this.selectedReport.timeIn.time).toLocaleTimeString('en-US',{hour12:false});
             },
             select_item(item) {
                 this.selectedEmployee = {
@@ -145,6 +147,17 @@
                 };
                 this.reports = this.MockReports.filter(report => report.timeIn.employeeId === this.selectedEmployee.id);
             },
+            save(){
+                let timeIn = new Date(this.selectedReportDate+' '+this.timeIn)
+                let timeOut = new Date(this.selectedReportDate+' '+this.timeIn)
+                this.selectedReport.timeIn.time = timeIn.getTime();
+                this.selectedReport.timeOut.time = timeOut.getTime();
+                // this.reports.match
+                // this.selectedReport.timeIn.time;
+            },
+            remove(){
+
+            }
 
         },
         components: {
