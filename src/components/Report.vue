@@ -81,13 +81,13 @@
                         id: 0,
                         timeIn: {id: 0, employeeId: 0, type: 'IN', time: 1571024493313},
                         timeOut: {id: 1, employeeId: 0, type: 'OUT', time: 1571024493313},
-                        totalHours: 565
+                        totalHours: 566
                     },
                     {
                         id: 1,
                         timeIn: {id: 0, employeeId: 1, type: 'IN', time: 1571024493313},
                         timeOut: {id: 1, employeeId: 1, type: 'OUT', time: 1571024493313},
-                        totalHours: 565
+                        totalHours: 567
                     },
                     {
                         id: 2,
@@ -110,9 +110,15 @@
                     timeOut: '',
                     total: ''
                 },
-                selectedReportDate:'',
+                selectedReportDate: '',
                 timeIn: '',
                 timeOut: '',
+                timeFormat: {
+                    hour12: false,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                }
             }
         },
         methods: {
@@ -122,7 +128,7 @@
             },
             getTime(timeInLong) {
                 let time = new Date(timeInLong);
-                return time.toLocaleTimeString();
+                return time.toLocaleTimeString('en-US', this.timeFormat);
             },
             editTime(report) {
                 this.selectedReport = report;
@@ -133,8 +139,8 @@
                     total: report.total
                 };
                 this.selectedReportDate = this.getDate(this.selectedReport.timeIn.time);
-                this.timeIn = new Date(this.selectedReport.timeIn.time).toLocaleTimeString('en-US',{hour12:false});
-                this.timeOut = new Date(this.selectedReport.timeIn.time).toLocaleTimeString('en-US',{hour12:false});
+                this.timeIn = new Date(this.selectedReport.timeIn.time).toLocaleTimeString('en-US', this.timeFormat);
+                this.timeOut = new Date(this.selectedReport.timeOut.time).toLocaleTimeString('en-US', this.timeFormat);
             },
             select_item(item) {
                 this.selectedEmployee = {
@@ -147,16 +153,28 @@
                 };
                 this.reports = this.MockReports.filter(report => report.timeIn.employeeId === this.selectedEmployee.id);
             },
-            save(){
-                let timeIn = new Date(this.selectedReportDate+' '+this.timeIn)
-                let timeOut = new Date(this.selectedReportDate+' '+this.timeIn)
+            save: function () {
+                let timeIn = new Date(this.selectedReportDate + ' ' + this.timeIn);
+                let timeOut = new Date(this.selectedReportDate + ' ' + this.timeOut);
                 this.selectedReport.timeIn.time = timeIn.getTime();
                 this.selectedReport.timeOut.time = timeOut.getTime();
-                // this.reports.match
-                // this.selectedReport.timeIn.time;
+                this.reports.find(report => report.id === this.selectedReport.id ? report = this.selectedReport : report);
+                this.clearTimeInput();
+                this.selectedReport = null
             },
-            remove(){
-
+            remove() {
+                if(this.selectedReport){
+                    this.reports.forEach(report => {
+                        if (report.id === this.selectedReport.id) {
+                            this.reports.splice(this.reports.indexOf(report),1)
+                        }
+                    });
+                    this.clearTimeInput()
+                }
+            },
+            clearTimeInput(){
+                this.timeIn = null;
+                this.timeOut = null;
             }
 
         },

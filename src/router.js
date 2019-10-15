@@ -11,5 +11,6 @@ export const routes = [
             {path:'/manage',component: ManageEmployee},
             {path:'/reports',component:Report}
         ]},
-    {path:'' , component:Navigation },
+    {path:'' , component:Navigation,children:[
+            {path:'/',component:Login},] },
 ]
