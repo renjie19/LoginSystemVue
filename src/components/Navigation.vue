@@ -3,40 +3,45 @@
         <div id="nav_bar">
             <h2>WELCOME</h2>
             <div class="button_wrapper">
-                <button class="btn" @click="showing='log',display===true?display=false:display">HOME</button>
+                <button class="btn" @click="navigate('home'),display===true?display=false:display">HOME</button>
                 <button class="btn" @click="display=!display">EMPLOYEE</button>
                 <div class="child" v-show="display">
-                    <button class="btn" @click="showing='create',display=!display">ADD</button>
+                    <button class="btn" @click="navigate('add'),display=!display">ADD</button>
                     <br>
-                    <button class="btn" @click="showing='manage',display=!display">MANAGE</button>
+                    <button class="btn" @click="navigate('manage'),display=!display">MANAGE</button>
                 </div>
-                <button class="btn" @click="showing='rep',display===true?display=false:display">REPORTS</button>
+                <button class="btn" @click="navigate('reports'),display===true?display=false:display">REPORTS</button>
             </div>
         </div>
-        <component :is="showing"></component>
+            <router-view></router-view>
+<!--        <component :is="showing"></component>-->
     </div>
 </template>
 
 <script>
-    import login from "./Login";
-    import report from "./Report";
-    import create_employee from "./CreateEmployee";
-    import manage_employee from "./ManageEmployee";
+    // import login from "./Login";
+    // import report from "./Report";
+    // import create_employee from "./CreateEmployee";
+    // import manage_employee from "./ManageEmployee";
     export default {
         data:function () {
             return {
                 showing:'log',
-                display:false
+                display:false,
+                page:''
             }
         },
         components:{
-            rep:report,
-            log:login,
-            create:create_employee,
-            manage:manage_employee
+            // rep:report,
+            // log:login,
+            // create:create_employee,
+            // manage:manage_employee
         },
         methods:{
-
+            navigate(location){
+                this.page = location;
+                this.$router.push(this.page)
+            }
         }
     }
 </script>

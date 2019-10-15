@@ -1,5 +1,6 @@
 <template>
-  <navigate></navigate>
+<!--  <navigate></navigate>-->
+  <router-view></router-view>
 </template>
 
 <script>
