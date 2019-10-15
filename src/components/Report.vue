@@ -15,11 +15,12 @@
                 </thead>
                 <tbody>
                 <tr v-for="report in reports" :key="report.id" @click="editTime(report)">
-                    <td>{{getDate(report.timeIn)}}</td>
-                    <td>{{getTime(report.timeIn)}}</td>
-                    <td>{{getTime(report.timeOut)}}</td>
-                    <td>{{report.total}}</td>
+                    <td>{{getDate(report.timeIn.time)}}</td>
+                    <td>{{getTime(report.timeIn.time)}}</td>
+                    <td>{{getTime(report.timeOut.time)}}</td>
+                    <td>{{report.totalHours}}</td>
                 </tr>
+
                 <tr>
                     <td>Overall Total:{{overAll}}</td>
                 </tr>
@@ -30,11 +31,11 @@
         <div class="edit_wrapper">
             <div class="edit_form">
                 <label for="timeIn">Time In</label>
-                <input type="text" id="timeIn">
+                <input type="text" id="timeIn" v-model="timeIn">
             </div>
             <div class="edit_form">
                 <label for="timeOut">Time Out</label>
-                <input type="text" id="timeOut">
+                <input type="text" id="timeOut" v-model="timeOut">
             </div>
             <br>
             <button class="edit_btn">SAVE</button>
@@ -44,14 +45,14 @@
 </template>
 
 <script>
-    import employee_table from "./employee_table";
+    import employee_table from "./Table";
 
     export default {
         data() {
             return {
                 employees: [
                     {
-                        id: 0,
+                        id: 1,
                         name: 'Rodrigo Duterte',
                         age: 55,
                         address: 'Manila',
@@ -59,7 +60,7 @@
                         license: {license_id: 0, license_number: 987}
                     },
                     {
-                        id: 1,
+                        id: 0,
                         name: 'Gloria Arroyo',
                         age: 55,
                         address: 'Manila',
@@ -75,16 +76,42 @@
                         license: {license_id: 0, license_number: 987}
                     }
                 ],
-                reports: [
-                    {id: 0, timeIn: 1571024493313, timeOut: 1571076264, total: 565},
-                    {id: 1, timeIn: 1571024493313, timeOut: 1571076264, total: 565}
-                ],
-                log: {
+                MockReports: [
+                    {
+                        id: 0,
+                        timeIn: {id: 0, employeeId: 0, type: 'IN', time: 1571024493313},
+                        timeOut: {id: 1, employeeId: 0, type: 'OUT', time: 1571024493313},
+                        totalHours: 565
+                    },
+                    {
+                        id: 1,
+                        timeIn: {id: 0, employeeId: 1, type: 'IN', time: 1571024493313},
+                        timeOut: {id: 1, employeeId: 1, type: 'OUT', time: 1571024493313},
+                        totalHours: 565
+                    },
+                    {
+                        id: 2,
+                        timeIn: {id: 0, employeeId: 1, type: 'IN', time: 1571024493313},
+                        timeOut: {id: 1, employeeId: 1, type: 'OUT', time: 1571024493313},
+                        totalHours: 565
+                    }
+                ], reports: [],
+                selectedEmployee: {
+                    id: '',
+                    name: '',
+                    age: '',
+                    address: '',
+                    position: '',
+                    license: {license_id: '', license_number: ''}
+                },
+                selectedReport: {
                     id: '',
                     timeIn: '',
                     timeOut: '',
                     total: ''
                 },
+                timeIn: '',
+                timeOut: '',
             }
         },
         methods: {
@@ -97,12 +124,26 @@
                 return time.toLocaleTimeString();
             },
             editTime(report) {
-                this.log = report;
-                document.getElementById("timeIn").value = new Date(this.log.timeIn).toLocaleTimeString();
-                document.getElementById("timeOut").value = new Date(this.log.timeOut).toLocaleTimeString();
+                this.selectedReport = report;
+                this.selectedReport = {
+                    id: report.id,
+                    timeIn: report.timeIn,
+                    timeOut: report.timeOut,
+                    total: report.total
+                };
+                this.timeIn = new Date(this.selectedReport.timeIn.time).toLocaleTimeString();
+                this.timeOut = new Date(this.selectedReport.timeIn.time).toLocaleTimeString();
             },
-            select_item() {
-
+            select_item(item) {
+                this.selectedEmployee = {
+                    id: item.id,
+                    name: item.name,
+                    age: item.age,
+                    address: item.address,
+                    position: item.position,
+                    license: {license_id: item.license.license_id, license_number: item.license.license}
+                };
+                this.reports = this.MockReports.filter(report => report.timeIn.employeeId === this.selectedEmployee.id);
             },
 
         },
@@ -111,13 +152,8 @@
         },
         computed: {
             overAll() {
-                // let totalHours = 0;
-                // this.reports.forEach((report)=>{
-                //     totalHours += report.total
-                // })
-                // return totalHours
                 return this.reports.reduce(function (acc, report) {
-                    return acc + report.total;
+                    return acc + report.totalHours;
                 }, 0)
             },
 

@@ -4,7 +4,7 @@
             <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
         </div>
         <div class="details">
-            <h2>INFORMATION</h2>
+            <strong>INFORMATION</strong>
             <div class="form-group">
                 <label for="name">NAME</label>
                 <br>
@@ -30,7 +30,7 @@
                 <br>
                 <input type="number" id="license" class="form-control" v-model.number="emp.license.license_number">
             </div>
-            <button class="btn">SUBJECTS</button>
+            <button class="btn" @click="subjectClick">SUBJECTS</button>
             <button class="btn">SECTIONS</button>
         </div>
         <div class = "button_holder">
@@ -38,11 +38,13 @@
             <button class="btn" @click="deleteEmployee(itemIndex)">DELETE</button>
             <button class="btn" @click="clearFields">CLEAR</button>
         </div>
+        <subjects></subjects>
     </div>
 </template>
 
 <script>
-    import employee_table from "./employee_table";
+    import employee_table from "./Table";
+    import Subjects from "./Subjects";
     export default {
         data(){
             return{
@@ -67,13 +69,20 @@
                     license:{
                         license_id:0,
                         license_number:'',
-                    }
+                    },
+                    subjects:[
+                        {id:'',subjectName:''}
+                    ],
+                    sections:[
+                        {id:'',sectionName:'',yearLevel:''}
+                    ]
                 },
-                itemIndex:''
+                itemIndex:null
             }
         },
         components:{
-            employee_table:employee_table
+            employee_table:employee_table,
+            subjects:Subjects
         },
         methods:{
             display(){
@@ -81,6 +90,7 @@
             },
             select_item(employee){
                 this.emp={
+                    id:employee.id,
                     name:employee.name,
                     age:employee.age,
                     address:employee.address,
@@ -90,13 +100,16 @@
                         license_number:employee.license.license_number
                     }
                 };
+                this.itemIndex=this.emp.id;
             },
             deleteEmployee(index){
                 this.clearFields();
-                this.employees.splice(index,1);
+                if(this.itemIndex){
+                    this.employees.splice(index,1);
+                    this.itemIndex = null
+                }
             },
             clearFields(){
-                console.log("clear");
                 this.emp={
                     name: null,
                     age:null,
@@ -105,7 +118,13 @@
                     license:{
                         license_id:null,
                         license_number:null
-                    }
+                    },
+                    subjects:[
+                        {id:null,subjectName:null}
+                    ],
+                    sections:[
+                        {id:null,sectionName:null,yearLevel:null}
+                    ]
                 };
             },
             save(){
@@ -113,6 +132,9 @@
             },
             showAlert(message){
                 alert(message);
+            },
+            subjectClick(){
+
             }
         },
         props:{
@@ -158,7 +180,7 @@
 
     }
     .form-group{
-        margin-top: 10px;
+        margin-top: 5px;
     }
     .form-control{
         border-radius: 2px;
@@ -177,7 +199,8 @@
         position: relative;
         margin: auto;
         width: 100%;
-        text-align: center;
+        /*text-align: center;*/
+        padding-left: 30%;
     }
     .button_holder button{
         background-color: lightsteelblue;

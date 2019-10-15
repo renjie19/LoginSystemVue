@@ -18,10 +18,10 @@
 </template>
 
 <script>
-    import login from "./login";
-    import report from "./report";
-    import create_employee from "./create_employee";
-    import manage_employee from "./manage_employee";
+    import login from "./Login";
+    import report from "./Report";
+    import create_employee from "./CreateEmployee";
+    import manage_employee from "./ManageEmployee";
     export default {
         data:function () {
             return {

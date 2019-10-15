@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import navigation from "./components/navigation";
+  import navigation from "./components/Navigation";
   export default {
     components:{
       'navigate':navigation
@@ -11,6 +11,9 @@
   }
 </script>
 
-<style scoped>
+<style>
+  body{
+    font-family: Garuda,serif;
+  }
 
 </style>
