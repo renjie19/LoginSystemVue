@@ -44,72 +44,79 @@
                     type="number"
                     id="license"
                     class="form-control"
-                    v-model="employee.license.license_number">
+                    v-model="employee.license.licenseNumber">
         </div>
         <div class="form-group">
             <button class="submit" @click="save">SUBMIT</button>
         </div>
-        <p>{{employee.name}}</p>
     </div>
 </template>
 
 <script>
     export default {
-        data(){
-            return{
-                employee:{
-                    name:'',
-                    age:'',
-                    address:'',
-                    position:'',
-                    license:{
-                        license_id:0,
-                            license_number:'',
+        data() {
+            return {
+                employee: {
+                    name: '',
+                    age: '',
+                    address: '',
+                    position: '',
+                    license: {
+                        licenseId: 0,
+                        licenseNumber: '',
                     }
                 },
             }
         },
-        methods:{
-            save(){
-                if(this.isEmpty()) {
-                    //save employee
-                }else{
-                    //alert field empty
+        methods: {
+            save() {
+                if (this.employee.name &&
+                    this.employee.age &&
+                    this.employee.address &&
+                    this.employee.position &&
+                    this.employee.license.licenseNumber) {
+                    this.employee.id = this.$store.state.employees.length;
+                    this.$store.commit('serverAddEmployee',this.employee);
+                    this.employee = {
+                        name: '',
+                        age: '',
+                        address: '',
+                        position: '',
+                        license: {
+                            licenseId: 0,
+                            licenseNumber: '',
+                        }
+                    }
+                } else {
+                    alert("Fill in all Fields");
                 }
-            },
-            isEmpty(){
-                return this.employee.name==='' ||
-                    this.employee.age==='' ||
-                    this.employee.address==='' ||
-                    this.employee.position==='' ||
-                    this.employee.license.license_number==='';
             }
         },
     }
 </script>
 
 <style scoped>
-    .wrapper{
+    .wrapper {
         width: 100%;
         height: 400px;
-        font-family: Garuda,serif;
+        font-family: Garuda, serif;
     }
 
 
-    .form-group{
+    .form-group {
         width: fit-content;
-        margin:20px auto auto auto;
+        margin: 20px auto auto auto;
     }
 
-    .form-control{
+    .form-control {
         width: 300px;
         height: 30px;
-        border:solid 1px lightgray;
+        border: solid 1px lightgray;
         border-radius: 3px;
         font-size: medium;
     }
 
-    .submit{
+    .submit {
         border: none;
         background: lightblue;
         height: 40px;
@@ -118,11 +125,11 @@
         border-radius: 5px;
     }
 
-    .submit:hover{
+    .submit:hover {
         background-color: lightsteelblue;
     }
 
-    h1{
+    h1 {
         text-align: center;
     }
 </style>

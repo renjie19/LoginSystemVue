@@ -3,26 +3,37 @@
         <div id="nav_bar">
             <h2>WELCOME</h2>
             <div class="button_wrapper">
-                <button class="btn" @click="navigate('home'),display===true?display=false:display">HOME</button>
-                <button class="btn" @click="display=!display">EMPLOYEE</button>
-                <div class="child" v-show="display">
-                    <button class="btn" @click="navigate('add'),display=!display">ADD</button>
+                <router-link
+                        tag="button"
+                        :to="{name:'home'}"
+                        class="btn"
+                        @click="navigate('/')">
+                    HOME
+                </router-link>
+                <button class="btn" @mouseenter="display=true" @mouseleave="display=false">EMPLOYEE</button>
+                <div class="child" v-show="display" @mouseover="display=true" @mouseleave="display=false">
+                    <router-link
+                            tag="button"
+                            :to="{name:'add'}"
+                            class="btn"
+                            @click="navigate('add')">
+                        ADD
+                    </router-link>
                     <br>
-                    <button class="btn" @click="navigate('manage'),display=!display">MANAGE</button>
+                    <router-link
+                            tag="button"
+                            :to="{name:'manage'}"
+                            class="btn"
+                            @click="navigate('manage')">MANAGE</router-link>
                 </div>
-                <button class="btn" @click="navigate('reports'),display===true?display=false:display">REPORTS</button>
+                <button class="btn" @click="navigate('reports')">REPORTS</button>
             </div>
         </div>
             <router-view></router-view>
-<!--        <component :is="showing"></component>-->
     </div>
 </template>
 
 <script>
-    // import login from "./Login";
-    // import report from "./Report";
-    // import create_employee from "./CreateEmployee";
-    // import manage_employee from "./ManageEmployee";
     export default {
         data:function () {
             return {
@@ -31,16 +42,15 @@
                 page:''
             }
         },
-        components:{
-            // rep:report,
-            // log:login,
-            // create:create_employee,
-            // manage:manage_employee
-        },
         methods:{
             navigate(location){
-                this.page = location;
-                this.$router.push(this.page)
+                this.$router.push(location);
+                if(location === '/' || location === 'reports'){
+                    this.display = false
+                } else {
+                    this.display = !this.display;
+                }
+
             }
         }
     }

@@ -2,45 +2,42 @@
     <div class="wrapper">
         <div>
             <div class="table_wrapper">
-                <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
+                <employee_table :employeeList="this.$store.state.employees" @employeeSelected="select_item"></employee_table>
             </div>
             <div class="details">
                 <strong>INFORMATION</strong>
                 <div class="form-group">
                     <label for="name">NAME</label>
                     <br>
-                    <input type="text" id="name" class="form-control" v-model="emp.name">
+                    <input type="text" id="name" class="form-control" v-model="employee.name">
                 </div>
                 <div class="form-group">
                     <label for="age">AGE</label>
                     <br>
-                    <input type="number" id="age" class="form-control" v-model.number="emp.age">
+                    <input type="number" id="age" class="form-control" v-model.number="employee.age">
                 </div>
                 <div class="form-group">
                     <label for="address">ADDRESS</label>
                     <br>
-                    <input type="text" id="address" class="form-control" v-model="emp.address">
+                    <input type="text" id="address" class="form-control" v-model="employee.address">
                 </div>
                 <div class="form-group">
                     <label for="position">POSITION</label>
                     <br>
-                    <input type="text" id="position" class="form-control" v-model="emp.position">
+                    <input type="text" id="position" class="form-control" v-model="employee.position">
                 </div>
                 <div class="form-group">
                     <label for="license">LICENSE</label>
                     <br>
-                    <input type="number" id="license" class="form-control" v-model.number="emp.license.license_number">
+                    <input type="number" id="license" class="form-control"
+                           v-model.number="employee.license.licenseNumber">
                 </div>
                 <button class="btn">SUBJECTS</button>
                 <button class="btn">SECTIONS</button>
-<!--                <employee_table class="relations" :employeeList="emp.subjects"-->
-<!--                                @employeeSelected="select_subject"></employee_table>-->
-<!--                <employee_table class="relations" :employeeList="emp.sections"-->
-<!--                                @employeeSelected="select_subject"></employee_table>-->
             </div>
             <div class="button_holder">
                 <button class="btn" @click="save">SAVE</button>
-                <button class="btn" @click="deleteEmployee(itemIndex)">DELETE</button>
+                <button class="btn" @click="deleteEmployee(employee)">DELETE</button>
                 <button class="btn" @click="clearFields">CLEAR</button>
             </div>
         </div>
@@ -53,22 +50,7 @@
     export default {
         data() {
             return {
-                employees: [
-                    {
-                        id: 0, name: 'Rodrigo Duterte', age: 55, address: 'Manila', position: 'President',
-                        license: {license_id: 0, license_number: 5678}, subjects: [{id: 0, name: 'Science'}]
-                    },
-                    {
-                        id: 1, name: 'Gloria Arroyo', age: 55, address: 'Manila', position: 'President',
-                        license: {license_id: 0, license_number: 5678}
-                    },
-                    {
-                        id: 2, name: 'Ninoy Aquino', age: 55, address: 'Manila', position: 'President',
-                        license: {license_id: 0, license_number: 5678}, subjects: [], sections: []
-                    },
-                ],
-                showing: false,
-                emp: {
+                employee: {
                     id: '',
                     name: '',
                     age: '',
@@ -78,14 +60,9 @@
                         license_id: 0,
                         license_number: '',
                     },
-                    subjects: [
-                        {id: '', subjectName: ''}
-                    ],
-                    sections: [
-                        {id: '', sectionName: '', yearLevel: ''}
-                    ]
+                    subjectList: [],
+                    sectionList: []
                 },
-                itemIndex: null
             }
         },
         components: {
@@ -96,30 +73,26 @@
                 return this.showing = !this.showing
             },
             select_item(employee) {
-                this.emp = {
-                    id: employee.id,
+                this.employee = {
+                    id: employee.employeeId,
                     name: employee.name,
                     age: employee.age,
                     address: employee.address,
                     position: employee.position,
                     license: {
-                        license_id: employee.license.license_id,
-                        license_number: employee.license.license_number
+                        licenseId: employee.license.licenseId,
+                        licenseNumber: employee.license.licenseNumber
                     },
-                    subjects: employee.subjects,
-                    sections: employee.sections
+                    subjectList: employee.subjectList,
+                    sectionList: employee.sectionList
                 };
-                this.itemIndex = this.emp.id;
             },
-            deleteEmployee(index) {
+            deleteEmployee(employee) {
                 this.clearFields();
-                if (this.itemIndex) {
-                    this.employees.splice(index, 1);
-                    this.itemIndex = null
-                }
+                this.$store.commit('deleteEmployee', employee)
             },
             clearFields() {
-                this.emp = {
+                this.employee = {
                     name: null,
                     age: null,
                     address: null,
@@ -137,16 +110,12 @@
                 };
             },
             save() {
-                this.showAlert('clicked');
-            },
-            showAlert(message) {
-                alert(message);
-            },
-            subjectClick() {
-
+                this.$store.commit('serverUpdateEmployee', this.employee);
             }
         },
-        props: {}
+        mounted() {
+            this.$store.commit('serverLoadEmployees');
+        }
     }
 </script>
 
@@ -212,22 +181,17 @@
     }
 
     .button_holder {
-        position: relative;
-        margin: auto;
-        width: 100%;
-        /*text-align: center;*/
-        padding-left: 30%;
+        position: absolute;
+        margin: 420px auto auto auto;
+        width: fit-content;
+        text-align: center;
+        /*padding-left: 30%;*/
+        display: inline-block;
     }
 
     .button_holder button {
         background-color: lightsteelblue;
+        box-shadow: 1px 1px 2px gray;
     }
 
-    .dialogBox{
-        position: fixed;
-        width: 100%;
-        height: 400px;
-        text-align: center;
-        background-color: grey;
-    }
 </style>

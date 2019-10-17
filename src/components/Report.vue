@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="table_wrapper">
-            <employee_table :employeeList="employees" @employeeSelected="select_item"></employee_table>
+            <employee_table :employeeList="this.$store.state.employees" @employeeSelected="select_item"></employee_table>
         </div>
         <div class="report_wrapper">
             <table>
@@ -14,13 +14,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="report in reports" :key="report.id" @click="editTime(report)">
+                <tr
+                        v-for="report in reports"
+                        :key="report.id"
+                        @click="editTime(report)">
                     <td>{{getDate(report.timeIn.time)}}</td>
                     <td>{{getTime(report.timeIn.time)}}</td>
                     <td>{{getTime(report.timeOut.time)}}</td>
                     <td>{{report.totalHours}}</td>
                 </tr>
-
                 <tr>
                     <td>Overall Total:{{overAll}}</td>
                 </tr>
@@ -50,52 +52,7 @@
     export default {
         data() {
             return {
-                employees: [
-                    {
-                        id: 1,
-                        name: 'Rodrigo Duterte',
-                        age: 55,
-                        address: 'Manila',
-                        position: 'President',
-                        license: {license_id: 0, license_number: 987}
-                    },
-                    {
-                        id: 0,
-                        name: 'Gloria Arroyo',
-                        age: 55,
-                        address: 'Manila',
-                        position: 'President',
-                        license: {license_id: 0, license_number: 987}
-                    },
-                    {
-                        id: 2,
-                        name: 'Ninoy Aquino',
-                        age: 55,
-                        address: 'Manila',
-                        position: 'President',
-                        license: {license_id: 0, license_number: 987}
-                    }
-                ],
-                MockReports: [
-                    {
-                        id: 0,
-                        timeIn: {id: 0, employeeId: 0, type: 'IN', time: 1571024493313},
-                        timeOut: {id: 1, employeeId: 0, type: 'OUT', time: 1571024493313},
-                        totalHours: 566
-                    },
-                    {
-                        id: 1,
-                        timeIn: {id: 0, employeeId: 1, type: 'IN', time: 1571024493313},
-                        timeOut: {id: 1, employeeId: 1, type: 'OUT', time: 1571024493313},
-                        totalHours: 567
-                    },
-                    {
-                        id: 2,
-                        timeIn: {id: 0, employeeId: 1, type: 'IN', time: 1571024493313},
-                        timeOut: {id: 1, employeeId: 1, type: 'OUT', time: 1571024493313},
-                        totalHours: 565
-                    }
-                ], reports: [],
+                reports:[],
                 selectedEmployee: {
                     id: '',
                     name: '',
@@ -151,7 +108,8 @@
                     position: item.position,
                     license: {license_id: item.license.license_id, license_number: item.license.license}
                 };
-                this.reports = this.MockReports.filter(report => report.timeIn.employeeId === this.selectedEmployee.id);
+                this.reports = this.$store.getters.getReports.filter(report =>
+                    report.timeIn.employeeId === this.selectedEmployee.id);
             },
             save: function () {
                 let timeIn = new Date(this.selectedReportDate + ' ' + this.timeIn);
@@ -186,8 +144,7 @@
                 return this.reports.reduce(function (acc, report) {
                     return acc + report.totalHours;
                 }, 0)
-            },
-
+            }
         }
     }
 </script>
@@ -218,6 +175,7 @@
         height: fit-content;
         min-height: 400px;
         display: inline-block;
+        overflow-y: auto;
     }
 
     .report_wrapper table {
