@@ -1,8 +1,8 @@
 <template>
     <div id="login">
         <strong>Employee Id</strong>
-        <input type="number" class="login" v-model="emp_id">
-        <button class="login">SUBMIT</button>
+        <input type="number" class="login" v-model="id">
+        <button class="login" @click="login">SUBMIT</button>
     </div>
 </template>
 
@@ -10,10 +10,15 @@
     export default {
         data: function () {
             return {
-                emp_id: null,
+                id: null,
             }
         },
-        methods: {}
+        methods: {
+            login(){
+                this.$store.commit('serverLogin',this.id);
+                this.id = null;
+            }
+        }
     }
 </script>
 

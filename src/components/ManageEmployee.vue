@@ -51,7 +51,7 @@
         data() {
             return {
                 employee: {
-                    id: '',
+                    employeeId: '',
                     name: '',
                     age: '',
                     address: '',
@@ -74,7 +74,7 @@
             },
             select_item(employee) {
                 this.employee = {
-                    id: employee.employeeId,
+                    employeeId: employee.employeeId,
                     name: employee.name,
                     age: employee.age,
                     address: employee.address,
@@ -89,7 +89,8 @@
             },
             deleteEmployee(employee) {
                 this.clearFields();
-                this.$store.commit('deleteEmployee', employee)
+                this.$store.commit('deleteEmployee', employee);
+                setTimeout(() => this.$store.commit('serverLoadEmployees'),500);
             },
             clearFields() {
                 this.employee = {
@@ -111,6 +112,7 @@
             },
             save() {
                 this.$store.commit('serverUpdateEmployee', this.employee);
+                setTimeout(() => this.$store.commit('serverLoadEmployees'),500);
             }
         },
         mounted() {

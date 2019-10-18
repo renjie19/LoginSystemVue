@@ -6,7 +6,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="employee in employeeList" :key="employee.id" @click="getEmployee(employee)">
+        <tr v-for="employee in employeeList" :key="employee.employeeId" @click="getEmployee(employee)">
             <td>{{employee.name}}</td>
         </tr>
         </tbody>

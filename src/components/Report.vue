@@ -54,7 +54,7 @@
             return {
                 reports:[],
                 selectedEmployee: {
-                    id: '',
+                    employeeId: '',
                     name: '',
                     age: '',
                     address: '',
@@ -90,7 +90,7 @@
             editTime(report) {
                 this.selectedReport = report;
                 this.selectedReport = {
-                    id: report.id,
+                    employeeId: report.id,
                     timeIn: report.timeIn,
                     timeOut: report.timeOut,
                     total: report.total
@@ -101,12 +101,12 @@
             },
             select_item(item) {
                 this.selectedEmployee = {
-                    id: item.id,
+                    employeeId: item.employeeId,
                     name: item.name,
                     age: item.age,
                     address: item.address,
                     position: item.position,
-                    license: {license_id: item.license.license_id, license_number: item.license.license}
+                    license: {license_id: item.license.licenseId, licenseNumber: item.license.license}
                 };
                 this.reports = this.$store.getters.getReports.filter(report =>
                     report.timeIn.employeeId === this.selectedEmployee.id);

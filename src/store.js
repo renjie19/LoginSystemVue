@@ -63,17 +63,8 @@ export const store = new Vuex.Store({
                 }
             });
         },
-        deleteEmployee: (state, employee) => {
-            Vue.axios.delete('http://localhost:8080/api/employee/deleteEmployee',employee.employeeId)
-                .then(() => {
-                    state.employees.find(e => {
-                        if (e.id === employee.id) {
-                            state.employees.splice(state.employees.indexOf(e), 1)
-                        }
-                    })
-                })
-                .catch()
-
+        deleteEmployee: (mutations, employee) => {
+            Vue.axios.delete('http://localhost:8080/api/employee/deleteEmployee?id='+employee.employeeId);
         },
         updateReports: (state,report) => {
             state.MockReports.find( e => {
@@ -89,13 +80,19 @@ export const store = new Vuex.Store({
         },
         serverLoadEmployees: state => {
             Vue.axios.get('http://localhost:8080/api/employee/getAll')
-                .then(response => { state.employees = response.data});
+                .then(response => {
+                    state.employees = response.data;
+                }).catch(() => console.log('error on load'))
         },
         serverUpdateEmployee: (state,employee) => {
-            console.log(employee)
             Vue.axios.post('http://localhost:8080/api/employee/update',employee)
                 .then(() => console.log('success'))
                 .catch(response => console.log(response));
+        },
+        serverLogin: id => {
+            Vue.axios.post('http://localhost:8080/api/facade/saveWeb/',id)
+                .then(response => { console.log(response)})
+                .catch();
         }
     },
     module: {
